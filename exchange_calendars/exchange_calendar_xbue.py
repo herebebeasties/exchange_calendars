@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import annotations
 
 import datetime
 from itertools import chain
@@ -344,15 +343,16 @@ class XBUEExchangeCalendar(ExchangeCalendar):
             "2016-11-28",  # Day of National Sovereignty
         ]
 
-        return list(
-            chain(
+        return [
+            pd.Timestamp(d)
+            for d in chain(
                 misc_adhocs,
                 market_closures_2002_jan,
                 market_closures_2002_apr,
                 bridge_days,
                 irregular_observances,
             )
-        )
+        ]
 
     @property
     def special_closes(self):

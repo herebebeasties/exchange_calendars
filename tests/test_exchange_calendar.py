@@ -9,7 +9,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import annotations
 
 from collections import abc
 from datetime import time
@@ -722,7 +721,7 @@ class Answers:
 
         Returns
         -------
-        list of pd.Datetimeindex
+        list of pd.DatetimeIndex
             [0] sessions with earlier next session
             [1] sessions with later next session
         """
@@ -1117,12 +1116,12 @@ class Answers:
     @property
     def sessions_range_defined_by_non_sessions(
         self,
-    ) -> tuple[tuple[pd.Timestamp, pd.Timestamp], pd.Datetimeindex] | None:
+    ) -> tuple[tuple[pd.Timestamp, pd.Timestamp], pd.DatetimeIndex] | None:
         """Range containing sessions although defined with non-sessions.
 
         Returns
         -------
-        tuple[tuple[pd.Timestamp, pd.Timestamp], pd.Datetimeindex]:
+        tuple[tuple[pd.Timestamp, pd.Timestamp], pd.DatetimeIndex]:
             [0] tuple[pd.Timestamp, pd.Timestamp]:
                 [0] range start as non-session date.
                 [1] range end as non-session date.
@@ -1364,7 +1363,7 @@ class Answers:
         for session, break_session in zip(sessions[mask], break_sessions[mask]):
             break_minutes = self.get_session_break_minutes(break_session)
             trading_minutes = self.get_session_minutes(session)[0]
-            bv = np.in1d(trading_minutes.time, break_minutes.time)
+            bv = np.isin(trading_minutes.time, break_minutes.time)
             minutes.append([trading_minutes[bv][-1], session, break_session])
         return minutes
 
@@ -1869,7 +1868,7 @@ class ExchangeCalendarTestBase:
         yield None
 
     @pytest.fixture
-    def early_closes_weekdays(self) -> abc.Iterator[tuple(int)]:
+    def early_closes_weekdays(self) -> abc.Iterator[tuple[int]]:
         """Weekdays with non-standard close times.
 
         `test_early_closes_weekdays` will check that all sessions on these
@@ -2124,7 +2123,7 @@ class ExchangeCalendarTestBase:
 
         Notes
         -----
-        NB Any test that employs this fixture assumes the accuarcy of the
+        NB Any test that employs this fixture assumes the accuracy of the
         default calendar's `tz` property.
         """
         cal = default_calendar

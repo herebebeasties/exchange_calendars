@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import datetime
-import typing
-from typing import Literal
+from typing import Literal, TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -11,7 +10,7 @@ import pandas as pd
 
 from exchange_calendars import errors
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from exchange_calendars import ExchangeCalendar
 
 UTC = ZoneInfo("UTC")
@@ -22,7 +21,7 @@ NP_NAT = pd.NaT.value
 
 # Use Date type where input does not need to represent an actual session
 # and will be parsed by parse_date.
-Date = typing.Union[pd.Timestamp, str, int, float, datetime.datetime]
+Date = pd.Timestamp | str | int | float | datetime.datetime
 
 # Use Session type where input should represent an actual session and will
 # be parsed by parse_session.
@@ -30,7 +29,7 @@ Session = Date
 
 # Use Minute type where input does not need to represent an actual trading
 # minute and will be parsed by parse_timestamp.
-Minute = typing.Union[pd.Timestamp, str, int, float, datetime.datetime]
+Minute = pd.Timestamp | str | int | float | datetime.datetime
 
 # Use TradingMinute where input should represent a trading minute and will
 # be parsed by parse_trading_minute.
@@ -484,8 +483,6 @@ class _TradingIndex:
         slce = slice(slice_start, slice_end)
 
         self.interval_nanos = period.value
-        self.dtype = np.int64 if self.interval_nanos < 3000000000 else np.int32
-
         self.closes = calendar.closes_nanos[slce]
 
         def align_opens(opens: pd.Series, align: pd.Timedelta) -> np.ndarray:
@@ -578,7 +575,7 @@ class _TradingIndex:
 
         # evaluate number of indices for each session
         num_intervals = (end_nanos - start_nanos) / self.interval_nanos
-        num_indices = np.ceil(num_intervals).astype("int")
+        num_indices = np.ceil(num_intervals).astype("int64")
 
         if force_close:
             if self.closed_right:
@@ -598,7 +595,7 @@ class _TradingIndex:
         start = 0 if self.closed_left else 1
         func = np.vectorize(lambda stop: np.arange(start, stop), otypes=[np.ndarray])
         stop = num_indices if self.closed_left else num_indices + 1
-        ranges = np.concatenate(func(stop), axis=0, dtype=self.dtype)
+        ranges = np.concatenate(func(stop), axis=0, dtype=np.int64)
 
         # evaluate index as nano array
         base = start_nanos.repeat(num_indices)
