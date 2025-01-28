@@ -1,7 +1,5 @@
 """Tests for calendar_helpers module."""
 
-from __future__ import annotations
-
 from collections import abc
 import datetime
 from datetime import time
@@ -51,7 +49,7 @@ def test_is_date(one_min):
     assert not f(T("2021-11-01 23:59:00.999999"))
     assert not f(T("2021-11-02 12:00"))
 
-    tz = ZoneInfo("US/Eastern")
+    tz = ZoneInfo("America/New_York")
     minutes = [
         T("2021-11-02", tz=UTC),
         T("2021-11-02", tz=tz),
@@ -72,7 +70,7 @@ def test_is_utc():
 
     expected = T("2021-11-02 13:33", tz=UTC)
     assert f(T("2021-11-02 13:33")) == expected
-    assert f(T("2021-11-02 09:33", tz=ZoneInfo("US/Eastern"))) == expected
+    assert f(T("2021-11-02 09:33", tz=ZoneInfo("America/New_York"))) == expected
 
 
 @pytest.fixture
@@ -318,7 +316,7 @@ def test_parse_date(date_mult, param_name):
 
 
 def test_parse_date_errors(calendar, param_name, date_too_early, date_too_late):
-    dt = pd.Timestamp("2021-06-02", tz=ZoneInfo("US/Central"))
+    dt = pd.Timestamp("2021-06-02", tz=ZoneInfo("America/Chicago"))
     with pytest.raises(ValueError, match="a Date must be timezone naive"):
         m.parse_date(dt, param_name, raise_oob=False)
 
@@ -456,9 +454,7 @@ class TestTradingIndex:
 
     @staticmethod
     @st.composite
-    def _st_times_different(
-        draw, ans
-    ) -> st.SearchStrategy[tuple[pd.Timestamp, pd.Timestamp]]:
+    def _st_times_different(draw, ans) -> tuple[pd.Timestamp, pd.Timestamp]:
         """SearchStrategy for two consecutive sessions with different times."""
         session = draw(st.sampled_from(ans.sessions_next_time_different.to_list()))
         next_session = ans.get_next_session(session)
@@ -466,9 +462,7 @@ class TestTradingIndex:
 
     @staticmethod
     @st.composite
-    def _st_start_end(
-        draw, ans
-    ) -> st.SearchStrategy[tuple[pd.Timestamp, pd.Timestamp]]:
+    def _st_start_end(draw, ans) -> tuple[pd.Timestamp, pd.Timestamp]:
         """SearchStrategy for start and end dates in calendar range and
         a calendar specific maximum distance."""
         first = ans.first_session
@@ -504,7 +498,7 @@ class TestTradingIndex:
         draw,
         minimum: pd.Timedelta = pd.Timedelta(1, "min"),
         maximum: pd.Timedelta = pd.Timedelta(1, "D") - pd.Timedelta(1, "min"),
-    ) -> st.SearchStrategy[pd.Timedelta]:
+    ) -> pd.Timedelta:
         """SearchStrategy for a period between a `minimum` and `maximum`."""
         period = draw(st.integers(minimum.seconds // 60, maximum.seconds // 60))
         return pd.Timedelta(period, "min")

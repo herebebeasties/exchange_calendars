@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import annotations
 
 import datetime
 from itertools import chain
@@ -410,12 +409,13 @@ class XPHSExchangeCalendar(ExchangeCalendar):
             "2010-12-31",
         ]
 
-        return list(
-            chain(
+        return [
+            pd.Timestamp(d)
+            for d in chain(
                 misc_adhoc,
                 pre_2011_holidays,
                 ChineseNewYearAfter2011,
                 philippines_eid_al_adha,
                 philippines_eid_al_fitr,
             )
-        )
+        ]
