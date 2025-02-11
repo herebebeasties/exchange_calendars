@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Literal
 
 from .calendar_helpers import parse_date, Date
@@ -23,8 +21,11 @@ from .exchange_calendar_xbue import XBUEExchangeCalendar
 from .exchange_calendar_xcbf import XCBFExchangeCalendar
 from .exchange_calendar_xcse import XCSEExchangeCalendar
 from .exchange_calendar_xdub import XDUBExchangeCalendar
+from .exchange_calendar_xdus import XDUSExchangeCalendar
+from .exchange_calendar_xeee import XEEEExchangeCalendar
 from .exchange_calendar_xetr import XETRExchangeCalendar
 from .exchange_calendar_xfra import XFRAExchangeCalendar
+from .exchange_calendar_xham import XHAMExchangeCalendar
 from .exchange_calendar_xhel import XHELExchangeCalendar
 from .exchange_calendar_xhkg import XHKGExchangeCalendar
 from .exchange_calendar_xice import XICEExchangeCalendar
@@ -37,6 +38,7 @@ from .exchange_calendar_xkrx import XKRXExchangeCalendar
 from .exchange_calendar_xlim import XLIMExchangeCalendar
 from .exchange_calendar_xlis import XLISExchangeCalendar
 from .exchange_calendar_xlon import XLONExchangeCalendar
+from .exchange_calendar_xlux import XLUXExchangeCalendar
 from .exchange_calendar_xmad import XMADExchangeCalendar
 from .exchange_calendar_xmex import XMEXExchangeCalendar
 from .exchange_calendar_xmil import XMILExchangeCalendar
@@ -81,8 +83,11 @@ _default_calendar_factories = {
     "XCBF": XCBFExchangeCalendar,
     "XCSE": XCSEExchangeCalendar,
     "XDUB": XDUBExchangeCalendar,
+    "XDUS": XDUSExchangeCalendar,
+    "XEEE": XEEEExchangeCalendar,
     "XFRA": XFRAExchangeCalendar,
     "XETR": XETRExchangeCalendar,
+    "XHAM": XHAMExchangeCalendar,
     "XHEL": XHELExchangeCalendar,
     "XHKG": XHKGExchangeCalendar,
     "XICE": XICEExchangeCalendar,
@@ -95,6 +100,7 @@ _default_calendar_factories = {
     "XLIM": XLIMExchangeCalendar,
     "XLIS": XLISExchangeCalendar,
     "XLON": XLONExchangeCalendar,
+    "XLUX": XLUXExchangeCalendar,
     "XMAD": XMADExchangeCalendar,
     "XMEX": XMEXExchangeCalendar,
     "XMIL": XMILExchangeCalendar,
@@ -127,6 +133,10 @@ _default_calendar_aliases = {
     "NASDAQ": "XNYS",
     "BATS": "XNYS",
     "XNAS": "XNYS",
+    "ARCX": "XNYS",
+    "OOTC": "XNYS",
+    "XASE": "XNYS",
+    "XTSX": "XTSE",
     "FWB": "XFRA",
     "LSE": "XLON",
     "TSX": "XTSE",
@@ -149,6 +159,7 @@ _default_calendar_aliases = {
     "SSE": "XSHG",
     "TASE": "XTAE",
     "BVB": "XBSE",
+    "LUXSE": "XLUX",
 }
 
 default_calendar_names = sorted(_default_calendar_factories.keys())
